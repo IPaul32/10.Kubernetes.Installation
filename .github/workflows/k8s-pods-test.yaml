@@ -10,7 +10,7 @@ jobs:
       run: |
         mkdir ~/.ssh
         eval `ssh-agent -s`
-        ssh-add - <<< "${{ secrets.SSH_PKEY }}"
+        echo "${{ secrets.SSH_PKEY }}" | ssh-add -
         ssh-keyscan -p 32510 ${{ secrets.BASTION_IP_JUMP }} >> ~/.ssh/known_hosts
         ssh -p 32510 ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }} ssh-keyscan ${{ secrets.VHOST_IP }} >> ~/.ssh/known_hosts
         ssh -o ProxyCommand="ssh -p 32510 -W %h:%p ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }}" ${{ secrets.VHOST_USER }}@${{ secrets.VHOST_IP }}"
