@@ -19,8 +19,8 @@ jobs:
         KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
 
     - name: Check Crash pods      
-        id: kubectl-pod
-        run: |
+      id: kubectl-pod
+      run: |
         kubectl get pods -A | grep -v Running >> output-pods.log
         echo "pods-dont-work=$(cat output-pods.log | wc -l)" >> $GITHUB_ENV
       continue-on-error: true
@@ -33,14 +33,14 @@ jobs:
         path: output-pods.log
 
 
-      - name: Slack notification about FAlL POD
-        uses: rtCamp/action-slack-notify@v2
-        if: steps.kubectl-pod.outputs.pods-dont-work > 0
-        env:
-          SLACK_CHANNEL: github_action
-          SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_COLOR: #b62e2e
-          SLACK_MESSAGE: 'Some pods have problems: {{  steps.kubectl-pod.outputs.pods-dont-work }}'
-          SLACK_TITLE: Post Title
-          SLACK_USERNAME: rtCamp
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+     - name: Slack notification about FAlL POD
+       uses: rtCamp/action-slack-notify@v2
+       if: steps.kubectl-pod.outputs.pods-dont-work > 0
+       env:
+         SLACK_CHANNEL: github_action
+         SLACK_ICON: https://github.com/rtCamp.png?size=48
+         SLACK_COLOR: #b62e2e
+         SLACK_MESSAGE: 'Some pods have problems: {{  steps.kubectl-pod.outputs.pods-dont-work }}'
+         SLACK_TITLE: Post Title
+         SLACK_USERNAME: rtCamp
+         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
