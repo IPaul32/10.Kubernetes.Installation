@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: ubuntu
+  name: ubuntu-dontwork 
   labels:
     app: ubuntu
 spec:
   containers:
-  - image: ghcr.io/pluhin/busy-box:latest
+  - image: ghcr.io/p/busy-box:latest
     command:
       - "sleep"
       - "604800"
     imagePullPolicy: IfNotPresent
-    name: ubuntu
+    name: ubuntu-dontwork
   restartPolicy: Always
