@@ -16,14 +16,14 @@ jobs:
         ssh -o ProxyCommand="ssh -p 32510 -W %h:%p ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }}" ${{ secrets.VHOST_USER }}@${{ secrets.VHOST_IP }}"
 
     - name: Check Crash pods
-      id: kubectl-pod
+      id: check-pods
       run: |
         kubectl get pods -A | grep -v Running >> output-pods.log
         echo "pods-dont-work=$(cat output-pods.log | wc -l)" >> $GITHUB_ENV
       continue-on-error: true
 
     - name: Upload Crashed Pods List
-      if: steps.kubectl-pod.outputs.pods-dont-work > 0
+      if: steps.check-pods.outputs.pods-dont-work > 0
       uses: actions/upload-artifact@v3
       with:
         name: Dead pods
@@ -36,7 +36,7 @@ jobs:
         SLACK_CHANNEL: github_action
         SLACK_ICON: https://github.com/rtCamp.png?size=48
         SLACK_COLOR: #b62e2e
-        SLACK_MESSAGE: 'Some pods have problems: {{  steps.kubectl-pod.outputs.pods-dont-work }}'
+        SLACK_MESSAGE: 'Some pods have problems: {{ steps.check-pods.outputs.pods-dont-work }}'
         SLACK_TITLE: Post Title
         SLACK_USERNAME: rtCamp
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
