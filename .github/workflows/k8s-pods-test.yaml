@@ -9,13 +9,13 @@ jobs:
     - name: Connect to Kubernetes Host
       run: |
         mkdir ~/.ssh
-        eval `ssh-agent -s`
+        eval `ssh-agent -s'
         ssh-add - <<< "${{ secrets.SSH_PKEY }}"
         ssh-keyscan -p 32510 ${{ secrets.BASTION_IP_JUMP }} >> ~/.ssh/known_hosts
         ssh -p 32510 ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }} ssh-keyscan ${{ secrets.VHOST_IP }} >> ~/.ssh/known_hosts
-        ssh -o ProxyCommand="ssh -p 32510 -W %h:%p ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }}" ${{ secrets.VHOST_USER }}@${{ secrets.VHOST_IP }}"      
-     
-    - name: Check Crash pods      
+        ssh -o ProxyCommand="ssh -p 32510 -W %h:%p ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }}" ${{ secrets.VHOST_USER }}@${{ secrets.VHOST_IP }}"
+
+    - name: Check Crash pods
       id: kubectl-pod
       run: |
         kubectl get pods -A | grep -v Running >> output-pods.log
@@ -29,15 +29,14 @@ jobs:
         name: Dead pods
         path: output-pods.log
 
-
-     - name: Slack notification about FAlL POD
-       uses: rtCamp/action-slack-notify@v2
-       if: steps.kubectl-pod.outputs.pods-dont-work > 0
-       env:
-         SLACK_CHANNEL: github_action
-         SLACK_ICON: https://github.com/rtCamp.png?size=48
-         SLACK_COLOR: #b62e2e
-         SLACK_MESSAGE: 'Some pods have problems: {{  steps.kubectl-pod.outputs.pods-dont-work }}'
-         SLACK_TITLE: Post Title
-         SLACK_USERNAME: rtCamp
-         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    - name: Slack notification about FAlL POD
+      uses: rtCamp/action-slack-notify@v2
+      if: steps.kubectl-pod.outputs.pods-dont-work > 0
+      env:
+        SLACK_CHANNEL: github_action
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_COLOR: #b62e2e
+        SLACK_MESSAGE: 'Some pods have problems: {{  steps.kubectl-pod.outputs.pods-dont-work }}'
+        SLACK_TITLE: Post Title
+        SLACK_USERNAME: rtCamp
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
