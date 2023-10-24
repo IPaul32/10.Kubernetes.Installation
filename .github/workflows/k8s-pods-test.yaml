@@ -14,25 +14,25 @@ jobs:
         ssh-keygen -l -f secret.key.pem
       continue-on-error: true
 
-#    - name: Connect to Kubernetes Host
-#      run: |
-#        set -x
-#        mkdir ~/.ssh
-#        eval `ssh-agent -s`
-#        ssh-add - <<< "${{ secrets.SSH_PKEY }}" 
-#        ssh-keyscan -p 32510 ${{ secrets.BASTION_IP_JUMP }} >> ~/.ssh/known_hosts
-#        ssh ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }} ssh-keyscan ${{ secrets.VHOST_IP }} >> ~/.ssh/known_hosts
-#        ssh -o ProxyCommand="ssh -W %h:%p -q ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }} -p 32510" ${{ secrets.VHOST_USER }}@${{ secrets.VHOST_IP }} 
-
     - name: Connect to Kubernetes Host
       run: |
         set -x
         mkdir ~/.ssh
         eval `ssh-agent -s`
-        ssh-add - <<< "${{ secrets.SSH_PKEY }}"
-        ssh-keyscan -p 32510 178.124.206.53 >> ~/.ssh/known_hosts
-        ssh jump_sa@178.124.206.53 -p 32510 ssh-keyscan 192.168.203.3 >> ~/.ssh/known_hosts
-        ssh -o ProxyCommand="ssh -W %h:%p jump_sa@178.124.206.53 -p 32510" root@192.168.203.3 "kubectl get pods -A" >> output-pods.log
+        ssh-add - <<< "${{ secrets.SSH_PKEY }}" 
+        ssh-keyscan -p 32510 ${{ secrets.BASTION_IP_JUMP }} >> ~/.ssh/known_hosts
+        ssh ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }} -p 32510 ssh-keyscan ${{ secrets.VHOST_IP }} >> ~/.ssh/known_hosts
+        ssh -o ProxyCommand="ssh -W %h:%p -q ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }} -p 32510" ${{ secrets.VHOST_USER }}@${{ secrets.VHOST_IP }} 
+
+#    - name: Connect to Kubernetes Host
+#      run: |
+#        set -x
+#        mkdir ~/.ssh
+#        eval `ssh-agent -s`
+#        ssh-add - <<< "${{ secrets.SSH_PKEY }}"
+#        ssh-keyscan -p 32510 178.124.206.53 >> ~/.ssh/known_hosts
+#        ssh jump_sa@178.124.206.53 -p 32510 ssh-keyscan 192.168.203.3 >> ~/.ssh/known_hosts
+#        ssh -o ProxyCommand="ssh -W %h:%p jump_sa@178.124.206.53 -p 32510" root@192.168.203.3 "kubectl get pods -A" >> output-pods.log
 
     - name: Check Crash pods
       id: check-pods
