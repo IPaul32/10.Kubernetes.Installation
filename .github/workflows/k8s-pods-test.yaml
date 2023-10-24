@@ -28,7 +28,7 @@ jobs:
       id: check-pods
       run: |
         echo "pods-dont-work=$(cat output-pods.log | grep -V Running | wc -l)" >> $GITHUB_ENV
-      continue-on-error: true
+#      continue-on-error: true
 
     - name: Upload Crashed Pods List
       if: steps.check-pods.outputs.pods-dont-work > 0
