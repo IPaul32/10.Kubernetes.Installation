@@ -47,3 +47,7 @@ jobs:
         SLACK_TITLE: Post Title
         SLACK_USERNAME: rtCamp
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+    - name: Debug slack
+      run: cat /tmp/slack-rt-action.log
+
