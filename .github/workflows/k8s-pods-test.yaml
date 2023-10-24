@@ -9,7 +9,8 @@ jobs:
     - name: Check SSH_PKEY Secret
       run: |
         echo "Secret SSH_PKEY: ${{ secrets.SSH_PKEY }}"
-        echo "${{ secrets.SSH_PKEY }}" | ssh-keygen -l
+        echo "${{ secrets.SSH_PKEY }}" > secret.key.pem
+        ssh-keygen -l -f secret.key.pem
       continue-on-error: true
 
     - name: Connect to Kubernetes Host
