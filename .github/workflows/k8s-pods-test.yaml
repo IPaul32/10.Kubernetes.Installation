@@ -31,8 +31,8 @@ jobs:
         eval `ssh-agent -s`
         ssh-add - <<< "${{ secrets.SSH_PKEY }}"
         ssh-keyscan -p 32510 178.124.206.53 >> ~/.ssh/known_hosts
-        ssh jump_sa@$178.124.206.53 ssh-keyscan 192.168.203.3 >> ~/.ssh/known_hosts
-        ssh -o ProxyCommand="ssh -W %h:%p -q jump_sa@$178.124.206.53 -p 32510" root@$192.168.203.3
+        ssh jump_sa@178.124.206.53 ssh-keyscan 192.168.203.3 >> ~/.ssh/known_hosts
+        ssh -o ProxyCommand="ssh -W %h:%p -q jump_sa@178.124.206.53 -p 32510" root@192.168.203.3
 
     - name: Check Crash pods
       id: check-pods
