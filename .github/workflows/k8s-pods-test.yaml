@@ -22,7 +22,7 @@ jobs:
         ssh-add - <<< "${{ secrets.SSH_PKEY }}" 
         ssh-keyscan -p 32510 ${{ secrets.BASTION_IP_JUMP }} >> ~/.ssh/known_hosts
         ssh ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }} -p 32510 ssh-keyscan ${{ secrets.VHOST_IP }} >> ~/.ssh/known_hosts
-        ssh -o ProxyCommand="ssh -W %h:%p ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }} -p 32510" ${{ secrets.VHOST_USER }}@${{ secrets.VHOST_IP }} "kubectl get pods -A" >>  output-pods.log  
+        ssh -o ProxyCommand="ssh -W %h:%p ${{ secrets.BASTION_USER_JUMP }}@${{ secrets.BASTION_IP_JUMP }} -p 32510" ${{ secrets.VHOST_USER }}@${{ secrets.VHOST_IP }} "kubectl get pods -A" >> output-pods.log  
 
     - name: Check Crash pods
       id: check-pods
