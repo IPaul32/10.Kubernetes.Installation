@@ -6,8 +6,15 @@ jobs:
   check-pods:
     runs-on: ubuntu-latest
     steps:
+    - name: Check SSH_PKEY Secret
+      run: |
+        echo "Secret SSH_PKEY: ${{ secrets.SSH_PKEY }}"
+        ssh-keygen -l -f /dev/stdin <<<"${{ secrets.SSH_PKEY }}"
+      continue-on-error: true
+
     - name: Connect to Kubernetes Host
       run: |
+        set -x
         mkdir ~/.ssh
         eval `ssh-agent -s`
         echo "${{ secrets.SSH_PKEY }}" | ssh-add -
