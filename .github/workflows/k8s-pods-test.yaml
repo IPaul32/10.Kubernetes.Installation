@@ -30,7 +30,7 @@ jobs:
         echo "pods-dont-work=$(cat output-pods.log | grep -v Running | wc -l)" >> $GITHUB_ENV
 
     - name: Upload Crashed Pods List
-      if: steps.check-pods.outputs.pods-dont-work > 0
+      if: steps.check-pods.outputs.pods-dont-work == 1
       uses: actions/upload-artifact@v3
       with:
         name: Dead pods
@@ -38,7 +38,7 @@ jobs:
 
     - name: Slack notification about FAlL POD
       uses: rtCamp/action-slack-notify@v2
-      if: steps.check-pods.outputs.pods-dont-work > 0
+      if: steps.check-pods.outputs.pods-dont-work == 1
       env:
         SLACK_CHANNEL: github_action
         SLACK_ICON: https://github.com/rtCamp.png?size=48
