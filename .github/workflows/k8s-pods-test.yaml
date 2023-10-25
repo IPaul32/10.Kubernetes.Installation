@@ -44,7 +44,7 @@ jobs:
         SLACK_CHANNEL: github_action
         SLACK_ICON: https://github.com/rtCamp.png?size=48
         SLACK_COLOR: #b62e2e
-        SLACK_MESSAGE: 'Some pods have problems: {{ steps.check-pods.outputs.pods-dont-work }}'
+        SLACK_MESSAGE: 'Some pods have problems: ${{ steps.check-pods.outputs.pods-dont-work }}'
         SLACK_TITLE: Post Title
         SLACK_USERNAME: rtCamp
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
